@@ -2,265 +2,222 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Sıla'nın Galaktik Eğlencesi</title>
+    <title>Sıla vs Göktaşları</title>
     <style>
         :root {
-            --main-color: #ff69b4;
-            --secondary-color: #00ff00;
+            --galaxy-bg: linear-gradient(45deg, #000000, #1a0033);
+            --comet-tail: #00ff8877;
         }
 
         body {
-            background: #0f0f23;
+            background: var(--galaxy-bg);
             color: #fff;
             font-family: 'Comic Sans MS', cursive;
-            text-align: center;
             margin: 0;
-            padding: 20px;
-            position: relative;
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+        .header {
+            text-align: center;
+            padding: 50px;
+            position: relative;
         }
 
-        .button-grid {
+        .sila-portrait {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 30px #00ff88;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .height-challenge {
+            background: #ffffff15;
+            padding: 20px;
+            margin: 30px auto;
+            width: 80%;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .shelf {
+            height: 160px;
+            border-bottom: 3px dashed #ff69b4;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .cookie-jar {
+            position: absolute;
+            right: 10px;
+            top: 30px;
+            font-size: 40px;
+            cursor: grab;
+        }
+
+        .growth-meter {
+            width: 60%;
+            height: 30px;
+            background: #333;
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .growth-fill {
+            width: 158%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #00ff88);
+            transition: 1s;
+        }
+
+        .comet {
+            position: fixed;
+            font-size: 40px;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .achievement-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin: 30px;
+            padding: 20px;
         }
 
-        button {
-            background: var(--main-color);
-            color: #000;
-            border: none;
+        .achievement-card {
+            background: #ffffff10;
             padding: 15px;
-            font-size: 18px;
-            cursor: pointer;
             border-radius: 15px;
-            transition: 0.3s;
-            border: 2px solid transparent;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--main-color);
-            border-color: var(--secondary-color);
-        }
-
-        .special-text {
-            font-size: 2.5em;
-            margin: 30px;
-            text-shadow: 3px 3px #000;
             cursor: pointer;
-            transition: 0.5s;
+            transition: 0.3s;
         }
 
-        .meteor-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
+        .achievement-card:hover {
+            transform: scale(1.05);
+            background: #ffffff20;
         }
 
-        .disco-mode {
-            animation: discoBg 0.5s infinite;
-        }
-
-        @keyframes rainbow {
-            0% { color: #ff0000; }
-            20% { color: #ff9900; }
-            40% { color: #ffff00; }
-            60% { color: #33ff00; }
-            80% { color: #0099ff; }
-            100% { color: #cc00ff; }
-        }
-
-        @keyframes dance {
-            0% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(10deg) scale(1.2); }
-            50% { transform: rotate(-10deg) scale(0.8); }
-            75% { transform: rotate(5deg) scale(1.1); }
-            100% { transform: rotate(0deg) scale(1); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
-        }
-
-        @keyframes discoBg {
-            0% { background: #ff0000; }
-            25% { background: #00ff00; }
-            50% { background: #0000ff; }
-            75% { background: #ffff00; }
-            100% { background: #ff00ff; }
-        }
-
-        .rocket {
-            position: fixed;
-            font-size: 40px;
-            bottom: -50px;
-            animation: rocketLaunch 3s forwards;
-        }
-
-        @keyframes rocketLaunch {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-150vh) rotate(360deg); }
+        #nicknameDisplay {
+            font-size: 24px;
+            color: #00ff88;
+            margin: 20px;
+            min-height: 60px;
         }
     </style>
 </head>
 <body>
-    <div class="meteor-container" id="meteorContainer"></div>
-    
-    <div class="container">
-        <h1 class="special-text" onclick="toggleDance()">
-            🪐 Sıla Göktaş'ın Eğlence Gezegeni 🌍
-        </h1>
+    <div class="header">
+        <h1>🪐 Sıla Göktaş'ın Mini Devleri 🍪</h1>
+        <img src="https://i.imgur.com/zNPKN5G.png" class="sila-portrait" alt="Sıla" onclick="throwComet()">
+        <div id="nicknameDisplay">Takma Ad: "Galaksinin Tatlı Meteoru"</div>
+    </div>
 
-        <div class="button-grid">
-            <button onclick="startMeteorShower()">Göktaş Yağmuru Başlat ☄️</button>
-            <button onclick="toggleRainbow()">Gökkuşağı Modu 🌈</button>
-            <button onclick="launchRocket()">Roket Fırlat 🚀</button>
-            <button onclick="createFireworks()">Havai Fişekler 🎇</button>
-            <button onclick="toggleFloat()">Uçma Modu 🦸♀️</button>
-            <button onclick="toggleDisco()">Disko Zamanı 💃</button>
+    <div class="height-challenge">
+        <h2>📏 Yükseklik Meydan Okuması</h2>
+        <div class="shelf">
+            <span class="cookie-jar" onclick="catchCookie()">🍪</span>
+            <div class="growth-meter">
+                <div class="growth-fill" style="width: 158%"></div>
+            </div>
         </div>
+        <button onclick="fakeGrowth()">🚀 Büyüme Serumu Enjekte Et</button>
+    </div>
 
-        <div id="messageBox" style="font-size: 24px; margin: 40px;">
-            "Boy küçük ama etkiler BÜYÜK!"
+    <div class="achievement-board">
+        <div class="achievement-card" onclick="showAchievement(1)">
+            🏆 Göktaşını Dizileme Ustası
         </div>
-
-        <audio id="soundEffect" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjMyLjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQAAsIn8wjQ8ABv7CQkBH/ERERERERERERERERERERERERERERERERERERERERERERERERERH/7kmQAD9AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjk5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//sQxAADAAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAAQqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//sQxDEAAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"></audio>
+        <div class="achievement-card" onclick="showAchievement(2)">
+            🌌 Mini Ayaklarla Galaksi Turu
+        </div>
+        <div class="achievement-card" onclick="showAchievement(3)">
+            🍕 3 Metrelik Pizza Uzatan
+        </div>
     </div>
 
 <script>
-let isRainbow = false;
-let isDancing = false;
-let isFloating = false;
-let isDisco = false;
+let growthAttempts = 0;
+const nicknames = [
+    "Meteor Avcısı",
+    "Kozmik Cüce",
+    "Galaksi Prensesi",
+    "Mini Dev",
+    "158cm'lik Süpernova",
+    "Göktaşlı Şakacı"
+];
 
-function playSound() {
-    document.getElementById('soundEffect').play();
+function throwComet() {
+    const comet = document.createElement('div');
+    comet.className = 'comet';
+    comet.style.left = Math.random() * 100 + 'vw';
+    comet.style.top = '-100px';
+    comet.textContent = '☄️';
+    document.body.appendChild(comet);
+
+    const animation = comet.animate([
+        { transform: 'rotate(0deg) translateY(0)' },
+        { transform: `rotate(720deg) translateY(${window.innerHeight + 200}px)` }
+    ], {
+        duration: 3000,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+    });
+
+    animation.onfinish = () => comet.remove();
 }
 
-function createMeteor() {
-    const meteor = document.createElement('div');
-    meteor.style.position = 'fixed';
-    meteor.style.left = Math.random() * 100 + 'vw';
-    meteor.style.fontSize = Math.random() * 30 + 20 + 'px';
-    meteor.textContent = '☄️';
-    meteor.style.animation = `meteorFall ${Math.random() * 2 + 1}s linear`;
-    meteorContainer.appendChild(meteor);
-
-    setTimeout(() => meteor.remove(), 2000);
+function fakeGrowth() {
+    growthAttempts++;
+    const meter = document.querySelector('.growth-fill');
+    const originalWidth = 158;
+    
+    meter.style.width = originalWidth + (growthAttempts * 5) + '%';
+    setTimeout(() => {
+        meter.style.width = originalWidth + '%';
+        alert(`🚨 Alarm! Büyüme serumu ${growthAttempts}. denemede başarısız oldu!\n"Boy pos değil, yürek önemli!" - Joost Klein`);
+    }, 1000);
 }
 
-function startMeteorShower() {
-    playSound();
-    for(let i = 0; i < 20; i++) {
-        setTimeout(createMeteor, i * 100);
-    }
+function catchCookie() {
+    const jar = document.querySelector('.cookie-jar');
+    jar.style.transform = 'translateY(-100px) rotate(360deg)';
+    jar.textContent = '🥛';
+    setTimeout(() => {
+        jar.style.transform = '';
+        jar.textContent = '🍪';
+        document.getElementById('nicknameDisplay').textContent = 
+            `Takma Ad: "${nicknames[Math.floor(Math.random() * nicknames.length)]}"`;
+    }, 500);
 }
 
-function toggleRainbow() {
-    const text = document.querySelector('.special-text');
-    isRainbow = !isRainbow;
-    text.style.animation = isRainbow ? 'rainbow 2s infinite' : 'none';
-    document.body.style.background = isRainbow ? '#000' : '#0f0f23';
+function showAchievement(id) {
+    const messages = [
+        "Göktaşlarını dizileyerek Guinness Rekoru kırdın! (Ayak parmaklarının üstünde)",
+        "Galaksi turunu 158 adımda tamamladın! 🌠",
+        "3 metrelik pizzayı 1.58 saniyede bitirdiğin için NASA'dan teklif aldın! 🍕"
+    ];
+    alert(messages[id-1] + "\n\n'Sıla küçük ama zaferler BÜYÜK!' ✨");
 }
 
-function toggleDance() {
-    const text = document.querySelector('.special-text');
-    isDancing = !isDancing;
-    text.style.animation = isDancing ? 'dance 1s infinite' : 'none';
-}
-
-function launchRocket() {
-    playSound();
-    const rocket = document.createElement('div');
-    rocket.className = 'rocket';
-    rocket.style.left = Math.random() * 90 + 'vw';
-    rocket.textContent = '🚀';
-    document.body.appendChild(rocket);
-    setTimeout(() => rocket.remove(), 3000);
-}
-
-function createFireworks() {
-    playSound();
-    const colors = ['#ff0000', '#00ff00', '#ffff00', '#ff00ff'];
-    for(let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.left = 50 + '%';
-        particle.style.top = 50 + '%';
-        particle.style.color = colors[Math.floor(Math.random() * colors.length)];
-        particle.textContent = '✨';
-        particle.style.fontSize = Math.random() * 30 + 10 + 'px';
-        
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 10 + 5;
-        particle.x = velocity * Math.cos(angle);
-        particle.y = velocity * Math.sin(angle);
-        
-        document.body.appendChild(particle);
-        
-        let posX = 50;
-        let posY = 50;
-        
-        const animate = () => {
-            posX += particle.x;
-            posY += particle.y;
-            particle.style.left = posX + '%';
-            particle.style.top = posY + '%';
-            
-            if(posX < 0 || posX > 100 || posY < 0 || posY > 100) {
-                particle.remove();
-            } else {
-                requestAnimationFrame(animate);
-            }
-        };
-        animate();
-    }
-}
-
-function toggleFloat() {
-    const messageBox = document.getElementById('messageBox');
-    isFloating = !isFloating;
-    messageBox.style.animation = isFloating ? 'float 2s ease-in-out infinite' : 'none';
-    messageBox.textContent = isFloating ? 
-        "🚀 Uçuyoruuuummmm!" : 
-        "Boy küçük ama etkiler BÜYÜK!";
-}
-
-function toggleDisco() {
-    isDisco = !isDisco;
-    document.body.className = isDisco ? 'disco-mode' : '';
-    document.querySelector('#messageBox').textContent = isDisco ?
-        "💃🕺 Disko zamanıııı!" :
-        "Boy küçük ama etkiler BÜYÜK!";
-}
-
-// Arka plan efektleri
+// Oyun içi fizik motoru
 setInterval(() => {
-    if(isDisco) {
-        const stars = document.createElement('div');
-        stars.style.position = 'fixed';
-        stars.style.left = Math.random() * 100 + 'vw';
-        stars.style.top = Math.random() * 100 + 'vh';
-        stars.textContent = '✨';
-        stars.style.fontSize = Math.random() * 20 + 10 + 'px';
-        document.body.appendChild(stars);
-        setTimeout(() => stars.remove(), 1000);
+    const cookies = document.querySelectorAll('.cookie-jar');
+    cookies.forEach(cookie => {
+        const rotation = Math.sin(Date.now()/200) * 15;
+        cookie.style.transform = `rotate(${rotation}deg)`;
+    });
+}, 50);
+
+// Mega meteor modu
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'm') {
+        document.body.style.background = 'url(https://i.gifer.com/7KxX.gif)';
+        alert("🌌 MEGA METEOR MODU AKTİF! 🌌\nSıla'nın gücü %158 arttı!");
     }
-}, 100);
+});
 </script>
 </body>
 </html>
